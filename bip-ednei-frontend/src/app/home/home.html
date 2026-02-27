@@ -1,0 +1,55 @@
+<main class="container">
+  <mat-card class="transfer-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title style="padding-bottom: 15px">Transferência entre Beneficiários</mat-card-title>
+      <mat-card-subtitle>Selecione o Beneficiário de Origem e Destino</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content >
+      @if (beneficios$ | async; as beneficios) {
+        <form [formGroup]="form" (ngSubmit)="transfer()" class="transfer-grid">
+
+          <mat-form-field appearance="fill">
+            <mat-label>Beneficiário de:</mat-label>
+            <mat-select formControlName="fromId">
+              @for (b of beneficios; track b.id) {
+                <mat-option [value]="b.id">{{ b.nome }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Beneficiário para:</mat-label>
+            <mat-select formControlName="toId">
+              @for (b of beneficios; track b.id) {
+                <mat-option [value]="b.id" [disabled]="b.id === form.value.fromId">
+                  {{ b.nome }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Montante</mat-label>
+            <input matInput formControlName="amount" placeholder="ex: 10.99"
+                   mask="separator.2"
+                   thousandSeparator="."
+                   decimalMarker=","
+                   prefix="R$ "
+                   [dropSpecialCharacters]="true"
+                   (blur)="normalizeCurrency(form, 'amount')"/>
+          </mat-form-field>
+
+          <div class="actions">
+            <button mat-flat-button color="primary"
+                    type="submit"
+                    [disabled]="form.invalid">
+              Transferir
+            </button>
+          </div>
+
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</main>

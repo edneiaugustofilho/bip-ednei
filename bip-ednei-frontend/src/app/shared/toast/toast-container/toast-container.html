@@ -1,0 +1,19 @@
+<div class="toast-host" aria-live="polite" aria-atomic="true">
+  @for (t of (toast.toasts$ | async) ?? []; track t.id) {
+    <div
+      class="toast"
+      [class.success]="t.type === 'success'"
+      [class.error]="t.type === 'error'"
+      [class.info]="t.type === 'info'"
+      [class.warning]="t.type === 'warning'"
+    >
+      <div class="toast__message">{{ t.message }}</div>
+
+      <button class="toast__close" type="button" (click)="toast.dismiss(t.id)">
+        ✕
+      </button>
+
+      <div class="toast__bar" [style.animation-duration.ms]="t.durationMs"></div>
+    </div>
+  }
+</div>
